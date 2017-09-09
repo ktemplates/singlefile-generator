@@ -16,6 +16,7 @@ Option:
 # --------------------
 Support template: 
   1. Bash
+  2. Zsh
 # --------------------
 Creator:   Kamontat Chantrachirathumrong
 Version:   1.0
@@ -93,7 +94,7 @@ done
 RESULT="$HEADER$SHELL\n"
 echo "Using template: $SHELL"
 
-if [[ $SHELL == "bash" ]]; then
+if [[ $SHELL == "bash" || $SHELL == "zsh" ]]; then
   echo "This will ask some section that you might need."
   echo "If you need it please enter 'Y' otherwise enter some of charactor to next"
   printf "Add Header? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_HEADER" && echo " -- Add!"
@@ -104,6 +105,7 @@ fi
 
 if [[ $FILE != "" ]]; then
   printf "$RESULT\n" > $FILE
+  [[ $SHELL == "bash" || $SHELL == "zsh" ]] && chmod +x $FILE
 else
   printf "$RESULT\n"
 fi
