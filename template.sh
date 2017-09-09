@@ -88,7 +88,7 @@ done
 RESULT="$HEADER$SHELL\n"
 
 if [[ $SHELL == "bash" ]]; then
-  echo "This will ask some section that you might need.\n"
+  echo "This will ask some section that you might need."
   echo "If you need it please enter 'Y' otherwise enter some of charactor to next"
   printf "Add Header? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_HEADER" && echo " -- Add!"
   printf "Add Constants? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_CONSTANT" && echo " -- Add!"
