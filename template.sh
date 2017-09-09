@@ -9,6 +9,11 @@ FILE=""
 
 HELP="
 # --------------------
+Option: 
+  -t -> template
+  -f -> file location and name
+  -h -> help command
+# --------------------
 Support template: 
   1. Bash
 # --------------------
