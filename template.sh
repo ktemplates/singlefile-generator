@@ -45,6 +45,7 @@ $B_LINE
 #               0.0.2b -- beta-format
 $B_LINE
 # Error code    1      -- error
+$B_LINE
 # Bug:          ...
 $B_LINE
 "
