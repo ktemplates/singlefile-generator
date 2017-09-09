@@ -46,6 +46,7 @@ $B_LINE
 $B_LINE
 # Error code    1      -- error
 # Bug:          ...
+$B_LINE
 "
 
 B_SEC_CONSTANT="
