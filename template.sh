@@ -9,6 +9,8 @@ FILE=""
 
 HELP="
 Support template: Bash
+# --------------------
+Version:          1.0
 "
 
 RESULT=""
