@@ -86,6 +86,7 @@ while getopts  't:f:h' flag; do
 done
 
 RESULT="$HEADER$SHELL\n"
+echo "Using template: $SHELL"
 
 if [[ $SHELL == "bash" ]]; then
   echo "This will ask some section that you might need."
