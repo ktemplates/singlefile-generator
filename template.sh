@@ -8,9 +8,13 @@ SHELL="bash"
 FILE=""
 
 HELP="
-Support template: Bash
 # --------------------
-Version:          1.0
+Support template: 
+  1. Bash
+# --------------------
+Creator:   Kamontat Chantrachirathumrong
+Version:   1.0
+# --------------------
 "
 
 RESULT=""
