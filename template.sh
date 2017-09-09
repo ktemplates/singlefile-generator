@@ -81,7 +81,7 @@ while getopts  't:f:h' flag; do
   case "${flag}" in
     t) SHELL="$(to_lower_case $OPTARG)" ;;
     f) FILE="$OPTARG" ;;
-    h) echo "$HELP" ;;
+    h) echo "$HELP"; exit 0 ;;
   esac
 done
 
