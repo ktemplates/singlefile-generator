@@ -4,7 +4,7 @@
 # script description
 # ---------------------------------------------
 
-VERSION="v1.0.1"
+VERSION="v1.0.2"
 
 # ---------------------------------------------
 # Constants
@@ -44,7 +44,7 @@ B_HELPER="
 "
 
 B_CD="
-cd "$(dirname "$(realpath $0)")"
+cd "\$(dirname "\$(realpath \$0)")"
 "
 
 B_SEC_HEADER="
@@ -117,7 +117,7 @@ echo "Using template: $SHELL"
 if [[ $SHELL == "bash" || $SHELL == "zsh" ]]; then
   echo "This will ask some section that you might need."
   echo "If you need it please enter 'Y' otherwise enter some of charactor to next"
-  RESULT="$RESULT\n$B_SEC_HELPER"
+  RESULT="$RESULT\n$B_HELPER"
   printf "Add Header? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_HEADER\n$B_CD" && echo " -- Add!"
   printf "Add Constants? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_CONSTANT" && echo " -- Add!"
   printf "Add Function? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_FUNCTION" && echo " -- Add!"
