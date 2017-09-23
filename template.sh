@@ -31,6 +31,12 @@ RESULT=""
 
 B_LINE="# -------------------------------------------------"
 
+B_HELPER="
+# set -x #DEBUG - Display commands and their arguments as they are executed.
+# set -v #VERBOSE - Display shell input lines as they are read.
+# set -n #EVALUATE - Check syntax of the script but don't execute.
+"
+
 B_CD="
 cd "$(dirname "$(realpath $0)")"
 "
@@ -99,7 +105,8 @@ echo "Using template: $SHELL"
 if [[ $SHELL == "bash" || $SHELL == "zsh" ]]; then
   echo "This will ask some section that you might need."
   echo "If you need it please enter 'Y' otherwise enter some of charactor to next"
-  printf "Add Header? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_HEADER" && echo " -- Add!"
+  RESULT="$RESULT\n$B_SEC_HELPER"
+  printf "Add Header? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_HEADER\n$B_CD" && echo " -- Add!"
   printf "Add Constants? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_CONSTANT" && echo " -- Add!"
   printf "Add Function? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_FUNCTION" && echo " -- Add!"
   printf "Add App logic? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_APP_LOGIC" && echo " -- Add!"
