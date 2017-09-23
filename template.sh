@@ -4,7 +4,7 @@
 # script description
 # ---------------------------------------------
 
-VERSION="v1.0.0"
+VERSION="v1.0.1"
 
 # ---------------------------------------------
 # Constants
@@ -93,6 +93,10 @@ function ask {
   to_lower_case $ans
 }
 
+function have_file {
+  [ -x $FILE ] && echo false || echo true
+}
+
 # ---------------------------------------------
 # app logic
 # ---------------------------------------------
@@ -118,9 +122,14 @@ if [[ $SHELL == "bash" || $SHELL == "zsh" ]]; then
   printf "Add Constants? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_CONSTANT" && echo " -- Add!"
   printf "Add Function? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_FUNCTION" && echo " -- Add!"
   printf "Add App logic? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_APP_LOGIC" && echo " -- Add!"
+  
+  # if no extension
+  if $(have_file); then
+    [ $(echo "$FILE" | grep "[\.].*[s][ch].*" 2>/dev/null) ] || FILE="$FILE.sh"
+  fi
 fi
 
-if [[ $FILE != "" ]]; then
+if $(have_file); then
   printf "$RESULT\n" > $FILE
   [[ $SHELL == "bash" || $SHELL == "zsh" ]] && chmod +x $FILE
 else
