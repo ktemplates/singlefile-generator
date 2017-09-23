@@ -1,6 +1,12 @@
 #!/bin/bash
 
 # ---------------------------------------------
+# script description
+# ---------------------------------------------
+
+VERSION="v1.0.0"
+
+# ---------------------------------------------
 # Constants
 # ---------------------------------------------
 HEADER="#!/bin/"
@@ -91,11 +97,13 @@ function ask {
 # app logic
 # ---------------------------------------------
 
-while getopts  't:f:h' flag; do
+while getopts  't:f:hv' flag; do
   case "${flag}" in
     t) SHELL="$(to_lower_case $OPTARG)" ;;
     f) FILE="$OPTARG" ;;
+    v) echo "$VERSION"; exit 0 ;;
     h) echo "$HELP"; exit 0 ;;
+    ?) echo "$HELP"; exit 1 ;;
   esac
 done
 
