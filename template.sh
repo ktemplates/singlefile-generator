@@ -44,7 +44,7 @@ B_HELPER="
 "
 
 B_CD="
-cd "\$(dirname "\$(realpath \$0)")"
+cd \"\$(dirname \"\$(realpath \"\$0\")\")\"
 "
 
 B_SEC_HEADER="
