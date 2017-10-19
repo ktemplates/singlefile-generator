@@ -9,7 +9,7 @@ VERSION="v1.0.2"
 # ---------------------------------------------
 # Constants
 # ---------------------------------------------
-HEADER="#!/bin/"
+HEADER="#!/usr/bin/env"
 SHELL="bash"
 FILE=""
 
@@ -111,7 +111,7 @@ while getopts  't:f:hv' flag; do
   esac
 done
 
-RESULT="$HEADER$SHELL\n"
+RESULT="$HEADER $SHELL\n"
 echo "Using template: $SHELL"
 
 if [[ $SHELL == "bash" || $SHELL == "zsh" ]]; then
