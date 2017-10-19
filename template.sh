@@ -4,7 +4,7 @@
 # script description
 # ---------------------------------------------
 
-VERSION="v1.0.2"
+VERSION="v2.0"
 
 # ---------------------------------------------
 # Constants
@@ -30,6 +30,13 @@ Version:   1.0
 "
 
 RESULT=""
+
+# ---------------------------------------------
+# help command
+# ---------------------------------------------
+
+# have 1 params, and it is `help` open help command and exit
+[ -n $1 ] && [[ "$1" == "help" ]] && echo "$HELP" && exit 0
 
 # ---------------------------------------------
 # Bash TEMPLATE
@@ -84,17 +91,42 @@ $B_LINE
 # Functions
 # ---------------------------------------------
 
-function to_lower_case {
+to_lower_case() {
   echo $1 | tr '[:upper:]' '[:lower:]'
 }
 
-function ask {
+ask() {
   read -n 1 ans
   to_lower_case $ans
 }
 
-function have_file {
-  [ -x $FILE ] && echo false || echo true
+have_file() {
+  [ -n $FILE ] && return 0 || return 1
+}
+
+# @params - 1 - extension regex
+is_file_has_extension() {
+  echo "$FILE" | grep "$2" 2>/dev/null
+}
+
+# @params - 1 - extension regex
+#           2 - default extension
+update_extension() {
+  if have_file; then 
+    ! is_file_has_extension "$1" && FILE="$FILE.$2"
+  fi
+}
+
+user_input() {
+  printf "$1 " && [[ $(ask) == "y" ]] && return 0 || return 1
+}
+
+sucessful() {
+  echo " -- Add!"
+}
+
+failure() {
+  echo
 }
 
 # ---------------------------------------------
@@ -118,15 +150,12 @@ if [[ $SHELL == "bash" || $SHELL == "zsh" ]]; then
   echo "This will ask some section that you might need."
   echo "If you need it please enter 'Y' otherwise enter some of charactor to next"
   RESULT="$RESULT\n$B_HELPER"
-  printf "Add Header? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_HEADER\n$B_CD" && echo " -- Add!"
-  printf "Add Constants? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_CONSTANT" && echo " -- Add!"
-  printf "Add Function? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_FUNCTION" && echo " -- Add!"
-  printf "Add App logic? " && [[ $(ask) == "y" ]] && RESULT="$RESULT\n$B_SEC_APP_LOGIC" && echo " -- Add!"
+  user_input "Add Header section?" && RESULT="$RESULT\n$B_SEC_HEADER\n$B_CD" && sucessful || failure
+  user_input "Add Constants section?" && RESULT="$RESULT\n$B_SEC_CONSTANT" && sucessful || failure
+  user_input "Add Function section?" && RESULT="$RESULT\n$B_SEC_FUNCTION" && sucessful || failure
+  user_input "Add App logic section?" && RESULT="$RESULT\n$B_SEC_APP_LOGIC" && sucessful || failure
   
-  # if no extension
-  if $(have_file); then
-    [ $(echo "$FILE" | grep "[\.].*[s][ch].*" 2>/dev/null) ] || FILE="$FILE.sh"
-  fi
+  update_extension "[\.].*[s][ch].*" "sh"
 fi
 
 if $(have_file); then
