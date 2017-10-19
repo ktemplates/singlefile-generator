@@ -4,7 +4,7 @@
 # script description
 # ---------------------------------------------
 
-VERSION="v2.0"
+VERSION="v2.1"
 
 # ---------------------------------------------
 # Constants
@@ -15,12 +15,12 @@ FILE=""
 
 HELP="
 # --------------------
-Option: 
+Option:
   -t -> template
   -f -> file location and name
   -h -> help command
 # --------------------
-Support template: 
+Support template:
   1. Bash
   2. Zsh
 # --------------------
@@ -36,10 +36,10 @@ RESULT=""
 # ---------------------------------------------
 
 # have 1 params, and it is `help` open help command and exit
-[ -n $1 ] && [[ "$1" == "help" ]] && echo "$HELP" && exit 0
+[ -n "$1" ] && [[ "$1" == "help" ]] && echo "$HELP" && exit 0
 
 # ---------------------------------------------
-# Bash TEMPLATE
+# Bash/zsh TEMPLATE
 # ---------------------------------------------
 
 B_LINE="# -------------------------------------------------"
@@ -91,42 +91,46 @@ $B_LINE
 # Functions
 # ---------------------------------------------
 
+print() {
+    printf "%-30s " "$1"
+}
+
 to_lower_case() {
-  echo $1 | tr '[:upper:]' '[:lower:]'
+  echo "$1" | tr '[:upper:]' '[:lower:]'
 }
 
 ask() {
-  read -n 1 ans
-  to_lower_case $ans
+  read -rn 1 ans
+  to_lower_case "$ans"
 }
 
 have_file() {
-  [ -n $FILE ] && return 0 || return 1
+  [ -n "$FILE" ] && return 0 || return 1
 }
 
 # @params - 1 - extension regex
 is_file_has_extension() {
-  echo "$FILE" | grep "$2" 2>/dev/null
+  echo "$FILE" | grep "$1" &>/dev/null
 }
 
 # @params - 1 - extension regex
 #           2 - default extension
 update_extension() {
-  if have_file; then 
+  if have_file; then
     ! is_file_has_extension "$1" && FILE="$FILE.$2"
   fi
 }
 
 user_input() {
-  printf "$1 " && [[ $(ask) == "y" ]] && return 0 || return 1
+  print "Add $1 section [Y|n]?" && [[ $(ask) == "y" ]] && return 0 || return 1
 }
 
-sucessful() {
+sucessfull() {
   echo " -- Add!"
 }
 
 failure() {
-  echo
+  echo " -- NOT!"
 }
 
 # ---------------------------------------------
@@ -135,7 +139,7 @@ failure() {
 
 while getopts  't:f:hv' flag; do
   case "${flag}" in
-    t) SHELL="$(to_lower_case $OPTARG)" ;;
+    t) SHELL="$(to_lower_case "$OPTARG")" ;;
     f) FILE="$OPTARG" ;;
     v) echo "$VERSION"; exit 0 ;;
     h) echo "$HELP"; exit 0 ;;
@@ -143,24 +147,36 @@ while getopts  't:f:hv' flag; do
   esac
 done
 
-RESULT="$HEADER $SHELL\n"
+RESULT="$HEADER $SHELL"
 echo "Using template: $SHELL"
 
 if [[ $SHELL == "bash" || $SHELL == "zsh" ]]; then
   echo "This will ask some section that you might need."
   echo "If you need it please enter 'Y' otherwise enter some of charactor to next"
   RESULT="$RESULT\n$B_HELPER"
-  user_input "Add Header section?" && RESULT="$RESULT\n$B_SEC_HEADER\n$B_CD" && sucessful || failure
-  user_input "Add Constants section?" && RESULT="$RESULT\n$B_SEC_CONSTANT" && sucessful || failure
-  user_input "Add Function section?" && RESULT="$RESULT\n$B_SEC_FUNCTION" && sucessful || failure
-  user_input "Add App logic section?" && RESULT="$RESULT\n$B_SEC_APP_LOGIC" && sucessful || failure
-  
+
+  user_input "Header" && {
+    RESULT="$RESULT\n$B_SEC_HEADER\n$B_CD" && sucessfull
+  } || failure
+
+  user_input "Constants" && {
+    RESULT="$RESULT\n$B_SEC_CONSTANT" && sucessfull
+  } || failure
+
+  user_input "Function" && {
+    RESULT="$RESULT\n$B_SEC_FUNCTION" && sucessfull
+  } || failure
+
+  user_input "App logic" && {
+    RESULT="$RESULT\n$B_SEC_APP_LOGIC" && sucessfull
+  } || failure
+
   update_extension "[\.].*[s][ch].*" "sh"
 fi
 
-if $(have_file); then
-  printf "$RESULT\n" > $FILE
-  [[ $SHELL == "bash" || $SHELL == "zsh" ]] && chmod +x $FILE
+if have_file; then
+  printf "$RESULT\n" > "$FILE"
+  [[ "$SHELL" == "bash" || "$SHELL" == "zsh" ]] && chmod +x "$FILE"
 else
   printf "$RESULT\n"
 fi
