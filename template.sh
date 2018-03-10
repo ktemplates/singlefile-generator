@@ -42,7 +42,8 @@ RESULT=""
 # Bash/zsh TEMPLATE
 # ---------------------------------------------
 
-B_LINE="#/ -------------------------------------------------"
+B_LINE_DOC="#/ -------------------------------------------------"
+B_LINE="# -------------------------------------------------"
 
 B_HELPER="
 # set -x #DEBUG - Display commands and their arguments as they are executed.
@@ -56,25 +57,28 @@ cd \"\$(dirname \"\$0\")\"
 "
 
 B_SEC_HEADER="
-$B_LINE
+$B_LINE_DOC
 #/ Description:  ...
 #/ Create by:    ...
 #/ Since:        ...
-$B_LINE
+$B_LINE_DOC
 #/ Version:      0.0.1  -- description
 #/               0.0.2b -- beta-format
-$B_LINE
+$B_LINE_DOC
 #/ Error code    1      -- error
-$B_LINE
+$B_LINE_DOC
 #/ Bug:          ...
-$B_LINE
+$B_LINE_DOC
 "
 
-B_HELP_FUNCTION="
+
+B_HELP_FUNCTION() {
+  echo "
 help() {
   cat \"$FILE\" | grep \"^#/\" | tr -d \"#/ \"
 }
 "
+}
 
 B_SEC_CONSTANT="
 $B_LINE
@@ -112,7 +116,7 @@ ask() {
 }
 
 have_file() {
-  [ -n "$FILE" ] && return 0 || return 1
+  [ -f "$FILE" ] && return 0 || return 1
 }
 
 # @params - 1 - extension regex
@@ -167,7 +171,7 @@ if [[ $SHELL == "bash" || $SHELL == "zsh" ]]; then
   } || failure
   
   user_input "Help" && {
-    RESULT="$RESULT\n$B_HELP_FUNCTION" && successful
+    RESULT="$RESULT\n$(B_HELP_FUNCTION)" && successful
   } || failure
 
   user_input "Constants" && {
