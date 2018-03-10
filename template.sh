@@ -4,7 +4,7 @@
 # script description
 # ---------------------------------------------
 
-VERSION="v2.1"
+VERSION="v3.0"
 
 # ---------------------------------------------
 # Constants
@@ -71,7 +71,7 @@ $B_LINE
 
 B_HELP_FUNCTION="
 help() {
-  cat "$0" | grep "^#/" | tr -d "#/ "
+  cat "$FILE" | grep "^#/" | tr -d "#/ "
 }
 "
 
@@ -166,7 +166,7 @@ if [[ $SHELL == "bash" || $SHELL == "zsh" ]]; then
   } || failure
   
   user_input "Help" && {
-    RESULT="$RESULT\n$B_HELP_FUNCTION\n$B_CD" && successful
+    RESULT="$RESULT\n$B_HELP_FUNCTION" && successful
   } || failure
 
   user_input "Constants" && {
