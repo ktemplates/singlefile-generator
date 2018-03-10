@@ -4,7 +4,7 @@
 # script description
 # ---------------------------------------------
 
-VERSION="v3.3"
+VERSION="v3.4"
 
 # ---------------------------------------------
 # Constants
@@ -189,7 +189,7 @@ if [[ $SHELL == "bash" || $SHELL == "zsh" ]]; then
   update_extension "[\.].*[s][ch].*" "sh"
 fi
 
-if have_file; then
+if [ -n "$FILE" ]; then
   printf "$RESULT\n" > "$FILE"
   [[ "$SHELL" == "bash" || "$SHELL" == "zsh" ]] && chmod +x "$FILE"
 else
