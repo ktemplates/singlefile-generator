@@ -42,7 +42,7 @@ RESULT=""
 # Bash/zsh TEMPLATE
 # ---------------------------------------------
 
-B_LINE="# -------------------------------------------------"
+B_LINE="#/ -------------------------------------------------"
 
 B_HELPER="
 # set -x #DEBUG - Display commands and their arguments as they are executed.
@@ -56,17 +56,23 @@ cd \"\$(dirname \"\$(realpath \"\$0\")\")\"
 
 B_SEC_HEADER="
 $B_LINE
-# Description:  ...
-# Create by:    ...
-# Since:        ...
+#/ Description:  ...
+#/ Create by:    ...
+#/ Since:        ...
 $B_LINE
-# Version:      0.0.1  -- description
-#               0.0.2b -- beta-format
+#/ Version:      0.0.1  -- description
+#/               0.0.2b -- beta-format
 $B_LINE
-# Error code    1      -- error
+#/ Error code    1      -- error
 $B_LINE
-# Bug:          ...
+#/ Bug:          ...
 $B_LINE
+"
+
+B_HELP_FUNCTION="
+help() {
+  cat "$0" | grep "^#/" | tr -d "#/ "
+}
 "
 
 B_SEC_CONSTANT="
@@ -125,7 +131,7 @@ user_input() {
   print "Add $1 section [Y|n]?" && [[ $(ask) == "y" ]] && return 0 || return 1
 }
 
-sucessfull() {
+successful() {
   echo " -- Add!"
 }
 
@@ -156,19 +162,23 @@ if [[ $SHELL == "bash" || $SHELL == "zsh" ]]; then
   RESULT="$RESULT\n$B_HELPER"
 
   user_input "Header" && {
-    RESULT="$RESULT\n$B_SEC_HEADER\n$B_CD" && sucessfull
+    RESULT="$RESULT\n$B_SEC_HEADER\n$B_CD" && successful
+  } || failure
+  
+  user_input "Help" && {
+    RESULT="$RESULT\n$B_HELP_FUNCTION\n$B_CD" && successful
   } || failure
 
   user_input "Constants" && {
-    RESULT="$RESULT\n$B_SEC_CONSTANT" && sucessfull
+    RESULT="$RESULT\n$B_SEC_CONSTANT" && successful
   } || failure
 
   user_input "Function" && {
-    RESULT="$RESULT\n$B_SEC_FUNCTION" && sucessfull
+    RESULT="$RESULT\n$B_SEC_FUNCTION" && successful
   } || failure
 
   user_input "App logic" && {
-    RESULT="$RESULT\n$B_SEC_APP_LOGIC" && sucessfull
+    RESULT="$RESULT\n$B_SEC_APP_LOGIC" && successful
   } || failure
 
   update_extension "[\.].*[s][ch].*" "sh"
