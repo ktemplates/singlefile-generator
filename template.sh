@@ -4,7 +4,7 @@
 # script description
 # ---------------------------------------------
 
-VERSION="v3.0"
+VERSION="v3.1"
 
 # ---------------------------------------------
 # Constants
@@ -71,7 +71,7 @@ $B_LINE
 
 B_HELP_FUNCTION="
 help() {
-  cat "$FILE" | grep "^#/" | tr -d "#/ "
+  cat \"$FILE\" | grep \"^#/\" | tr -d \"#/ \"
 }
 "
 
