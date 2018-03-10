@@ -4,7 +4,7 @@
 # script description
 # ---------------------------------------------
 
-VERSION="v3.1"
+VERSION="v3.2"
 
 # ---------------------------------------------
 # Constants
@@ -51,7 +51,8 @@ B_HELPER="
 "
 
 B_CD="
-cd \"\$(dirname \"\$(realpath \"\$0\")\")\"
+cd \"\$(dirname \"$0\")\"
+# cd \"\$(dirname \"\$(realpath \"\$0\")\")\"
 "
 
 B_SEC_HEADER="
