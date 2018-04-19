@@ -25,6 +25,9 @@
 
 cd "$(dirname "$0")" || exit 1
 
-$PWD/uninstall.sh
+cp $PWD/uninstall.sh /tmp/uninstall.sh
+cp $PWD/install.sh /tmp/install.sh
 
-$PWD/install.sh
+/tmp/uninstall.sh
+
+/tmp/install.sh
