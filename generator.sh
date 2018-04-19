@@ -1,0 +1,349 @@
+#!/usr/bin/env bash
+
+# set -x #DEBUG - Display commands and their arguments as they are executed.
+# set -v #VERBOSE - Display shell input lines as they are read.
+# set -n #EVALUATE - Check syntax of the script but don't execute.
+
+#/ -------------------------------------------------
+#/ Description:  ...
+#/ How to:       generator.sh
+#/                                      -- gen, with default template to stdout
+#/               generator.sh <filename[.ext]>...
+#/                                      -- gen, with default template to file(s)
+#/               generator.sh [-t|--template <name>] [-s|--sub <subtemplate>]
+#/                                      -- gen, with input template name and (optional) subtemplate
+#/                                      --      for example template is shell, sub-template is zsh
+#/ Options:      --help | -h
+#/                      -- help command
+#/               --version | -v
+#/                      -- get version
+#/ Create by:    Kamontat Chantrachirathumrong
+#/ Since:        18 / 04 / 2018
+#/ -------------------------------------------------
+#/ Version:      0.0.1  -- Add option
+#/               1.0.0  -- Completed first version
+#/ -------------------------------------------------
+#/ Error code    1      -- error
+#/               2      -- location not found
+#/               3      -- variable not exist
+#/               5      -- require value not exist
+#/               10     -- option and argument missing
+#/ -------------------------------------------------
+
+cd "$(dirname "$0")" || exit 1
+# cd "$(dirname "$(realpath "$0")")"
+
+help() {
+	cat "generator.sh" | grep "^#/" | sed "s/#\/ //g"
+}
+
+version() {
+	echo "1.0.0"
+}
+
+# -------------------------------------------------
+# Constants
+# -------------------------------------------------
+
+test -z "$DEFAULT" && export DEFAULT="shell"
+test -z "$SUB_DEFAULT" && export SUB_DEFAULT="bash"
+export GENERATE_STR=""
+
+REQUIRE=""
+
+# -------------------------------------------------
+# Functions
+# -------------------------------------------------
+
+to_lower_case() {
+	echo "$1" | tr '[:upper:]' '[:lower:]'
+}
+
+to_upper_case() {
+	echo "$1" | tr '[:lower:]' '[:upper:]'
+}
+
+is_integer() {
+	[[ $1 =~ ^[0-9]+$ ]] 2>/dev/null && return 0 || return 1
+}
+
+_print() {
+	header="$1"
+	message="$2"
+
+	printf "%3s: %s" "$header" "$message"
+}
+
+throw() {
+	printf '%s\n' "$1" >&2 && is_integer "$2" && exit "$2"
+	return 0
+}
+
+throw_if_empty() {
+	# shellcheck disable=SC2015
+	[ -n "$1" ] && return 0 || throw "$2" "$3"
+}
+
+print_add() {
+	header="$1"
+	name="$2"
+
+	str="$(printf "Add %-20s section [Y|n]?" "$name")"
+
+	_print "$header" "$str"
+}
+
+end_print() {
+	lr="$(to_lower_case "$1")"
+
+	[[ $lr == "a" ]] ||
+		[[ $lr == "ad" ]] ||
+		[[ $lr == "add" ]] ||
+		[[ $lr == "0" ]] &&
+		printf "\e[u-- ADD!\e[10C\n"
+
+	[[ $lr == "n" ]] ||
+		[[ $lr == "no" ]] ||
+		[[ $lr == "not" ]] ||
+		[[ $lr == "none" ]] ||
+		[[ $lr == "1" ]] &&
+		printf "\e[u-- NONE!!\e[10C\n"
+
+	[[ $lr == "e" ]] ||
+		[[ $lr == "er" ]] ||
+		[[ $lr == "err" ]] ||
+		[[ $lr == "error" ]] ||
+		[[ $lr == "-1" ]] &&
+		printf "\e[u-- ERROR!!!\e[10C\n"
+}
+
+confirm() {
+	printf "  "
+	local ans
+	read -rn 1 ans
+	printf "  \e[s"
+	[[ $(to_lower_case "$ans") == "y" ]]
+}
+
+prompt() {
+	local name="$1" ans
+
+	printf "Enter %s?: " "$name"
+	read -r ans
+
+	export RESULT="$ans"
+}
+
+setup() {
+	name="$1"
+	value="$2"
+	export "$name"="$value"
+}
+
+get_variable_name() {
+	local regex=".*\${\([^{}]*\)}.*"
+	content="$1"
+
+	grep -q $regex <<<"$content" || return 1
+	echo "$content" | tr -d "\n" | sed "s/$regex/\1/g"
+}
+
+# @option
+require_argument() {
+	throw_if_empty "$LONG_OPTVAL" "'$LONG_OPTARG' require argument" 9
+}
+
+# @option
+no_argument() {
+	[[ -n $LONG_OPTVAL ]] && ! [[ $LONG_OPTVAL =~ "-" ]] && throw "$LONG_OPTARG don't have argument" 9
+	OPTIND=$((OPTIND - 1))
+}
+
+# @syscall
+set_key_value_long_option() {
+	if [[ $OPTARG =~ "=" ]]; then
+		LONG_OPTVAL="${OPTARG#*=}"
+		LONG_OPTARG="${OPTARG%=$LONG_OPTVAL}"
+	else
+		LONG_OPTARG="$OPTARG"
+		LONG_OPTVAL="$1"
+		OPTIND=$((OPTIND + 1))
+	fi
+}
+
+replace_filename() {
+	local filename="$1" all="$2"
+	test -n "$filename" &&
+		file_name="$filename" &&
+		export RESULT=$(sed "s/\${file_name}/$file_name/g" <<<"$all")
+
+	export file_name
+}
+
+load_argument() {
+	local files options=()
+	for i in "$@"; do
+		if [[ $i =~ "-" ]]; then
+			# options+=("$i")
+			break
+		else
+			files+=("$i")
+			shift
+		fi
+	done
+
+	test -z "$FILES" && export FILES=("${files[@]}")
+	test -z "$OPTIONS" && export OPTIONS=("$@")
+}
+
+load_option() {
+	while getopts 'DhHs:p:t:-:' flag; do
+		case "${flag}" in
+		D) set -x ;;
+		H) help && exit 0 ;;
+		h) help && exit 0 ;;
+		s) shell_name="$OPTARG" ;;
+		p) package_name="$OPTARG" ;;
+		t) DEFAULT="$OPTARG" ;;
+		-)
+			export LONG_OPTARG
+			export LONG_OPTVAL
+			NEXT="${!OPTIND}"
+			set_key_value_long_option "$NEXT"
+			case "${OPTARG}" in
+			debug)
+				no_argument
+				set -x
+				;;
+			help)
+				no_argument
+				help
+				;;
+			shell*)
+				require_argument
+				shell_name="$LONG_OPTVAL"
+				;;
+			type*)
+				require_argument
+				DEFAULT="$LONG_OPTVAL"
+				;;
+			package*)
+				require_argument
+				package_name="$LONG_OPTVAL"
+				;;
+			*)
+				# because optspec is assigned by 'getopts' command
+				# shellcheck disable=SC2154
+				if [ "$OPTERR" == 1 ] && [ "${optspec:0:1}" != ":" ]; then
+					echo "Unexpected option '$LONG_OPTARG', run --help for more information" >&2
+					exit 9
+				fi
+				;;
+			esac
+			;;
+		?)
+			echo "Unexpected option, run --help for more information" >&2
+			exit 10
+			;;
+		*)
+			echo "Unexpected option $flag, run --help for more information" >&2
+			exit 10
+			;;
+		esac
+	done
+}
+
+load_res() {
+	location="${PWD}/res/$DEFAULT"
+	run_script="${location}/run.sh"
+
+	! test -d "$location" && throw "$DEFAULT not found on location ($location)" 2
+	! test -f "$run_script" && throw "$run_script not found on location"
+	test -f "$run_script" &&
+		source "$run_script"
+	# setup "file_name" "generator.sh" &&
+	# if ! error=$(required); then
+	# 	throw "'$error' variable not exist" 3
+	# fi
+
+	for file in ${location}/*; do
+		grep -q "[^0-9]\.sh" <<<"$file" && continue
+
+		number=${file%%.*}
+		number=${number//$location\//}
+
+		name=${file##*.}
+		name="$(to_upper_case "$name")"
+		print_add "$number" "$name"
+		if ! confirm; then
+			end_print "not"
+			continue
+		fi
+		content="$(cat "$file")"
+		if variable="$(get_variable_name "$content")"; then
+			if ! [[ $variable == "file_name" ]]; then
+
+				replace="${!variable}"
+				if test -z "${!variable}" &&
+					prompt "$variable"; then
+					eval "export ${variable}=$RESULT" &&
+						replace="$RESULT"
+				fi
+
+				content=$(sed "s/\${$variable}/$replace/g" <<<"$content")
+			else
+				REQUIRE="file_name,$REQUIRE"
+			fi
+		fi
+
+		# echo "-------- $variable --------"
+		GENERATE_STR="${GENERATE_STR}\n${content}\n"
+		end_print "add"
+	done
+}
+
+# -------------------------------------------------
+# App logic
+# -------------------------------------------------
+
+load_argument "$@"
+
+load_option "${OPTIONS[@]}"
+
+if ! load_res; then
+	throw "cannot load resource" 1
+
+fi
+
+# stdout
+if [ ${#FILES} -eq 0 ]; then
+	# prompt
+	[[ "$REQUIRE" =~ "file_name" ]] &&
+		prompt "file_name" &&
+		eval "export ${variable}=$RESULT" &&
+		replace="$RESULT"
+	# replace
+	replace_filename "$replace" "$GENERATE_STR"
+
+	echo "---------- OUTPUT ----------"
+
+	# check
+	if ! error=$(required); then
+		throw "${error} not exist!" 5
+	fi
+	# output
+	printf "${RESULT}\n"
+	# file
+else
+	for file in "${FILES[@]}"; do
+		replace_filename "$file" "$GENERATE_STR"
+
+		echo "---------- OUTPUT ----------"
+
+		if ! error=$(required); then
+			throw "${error} not exist!" 5
+		fi
+
+		printf "${RESULT}\n" >"${file}"
+	done
+fi
