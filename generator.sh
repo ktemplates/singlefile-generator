@@ -115,14 +115,21 @@ _print() {
 	header="$1"
 	message="$2"
 
-	printf "%3s: %s" "$header" "$message"
+	printf "%10s: %s" "$header" "$message"
+}
+
+print_replace() {
+	name="$1"
+	str="$(printf "Replace %-15s file [Y|n]?" "$name")"
+
+	_print "warning" "$str"
 }
 
 print_add() {
 	header="$1"
 	name="$2"
 
-	str="$(printf "Add %-20s section [Y|n]?" "$name")"
+	str="$(printf "Add %-16s section [Y|n]?" "$name")"
 
 	_print "$header" "$str"
 }
@@ -277,9 +284,7 @@ load_option() {
 }
 
 load_res() {
-	link="https://raw.githubusercontent.com/Template-generator/script-genrating/master/res/"
-	curl -so "/tmp/res" "$link"
-	location="/tmp/res/$DEFAULT"
+	location="${PWD}/res/$DEFAULT"
 	run_script="${location}/run.sh"
 
 	! test -d "$location" && throw "$DEFAULT not found on location ($location)" 2
@@ -322,7 +327,7 @@ load_res() {
 		fi
 
 		# echo "-------- $variable --------"
-		GENERATE_STR="${GENERATE_STR}\n${content}\n"
+		GENERATE_STR="${GENERATE_STR}${content}\n"
 		end_print "add"
 	done
 }
@@ -367,6 +372,15 @@ else
 
 		if ! error=$(required); then
 			throw "${error} not exist!" 5
+		fi
+
+		if test -f "${file}"; then
+			print_replace "$file"
+			if ! confirm; then
+				end_print "not"
+				continue
+			fi
+			end_print "add"
 		fi
 
 		printf "${RESULT}\n" >"${file}"
