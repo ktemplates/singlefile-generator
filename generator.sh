@@ -17,6 +17,9 @@
 #/                      -- help command
 #/               --version | -v
 #/                      -- get version
+#/               --type | -t <script type>
+#/                      -- input type name, specify by folder in 'res' folder
+#/                      -- link: https://github.com/Template-generator/script-genrating/tree/master/res
 #/ Create by:    Kamontat Chantrachirathumrong
 #/ Since:        18 / 04 / 2018
 #/ -------------------------------------------------
@@ -47,13 +50,17 @@ version() {
 
 test -z "$DEFAULT" && export DEFAULT="shell"
 test -z "$SUB_DEFAULT" && export SUB_DEFAULT="bash"
-export GENERATE_STR=""
 
+GENERATE_STR=""
 REQUIRE=""
 
 # -------------------------------------------------
 # Functions
 # -------------------------------------------------
+
+# |-------------------------------------------------|
+# |  Helper                                         |
+# |-------------------------------------------------|
 
 to_lower_case() {
 	echo "$1" | tr '[:upper:]' '[:lower:]'
@@ -67,13 +74,6 @@ is_integer() {
 	[[ $1 =~ ^[0-9]+$ ]] 2>/dev/null && return 0 || return 1
 }
 
-_print() {
-	header="$1"
-	message="$2"
-
-	printf "%3s: %s" "$header" "$message"
-}
-
 throw() {
 	printf '%s\n' "$1" >&2 && is_integer "$2" && exit "$2"
 	return 0
@@ -82,6 +82,40 @@ throw() {
 throw_if_empty() {
 	# shellcheck disable=SC2015
 	[ -n "$1" ] && return 0 || throw "$2" "$3"
+}
+
+setup() {
+	name="$1"
+	value="$2"
+	export "$name"="$value"
+}
+
+get_variable_name() {
+	local regex=".*\${\([^{}]*\)}.*"
+	content="$1"
+
+	grep -q $regex <<<"$content" || return 1
+	echo "$content" | tr -d "\n" | sed "s/$regex/\1/g"
+}
+
+replace_filename() {
+	local filename="$1" all="$2"
+	test -n "$filename" &&
+		file_name="$filename" &&
+		export RESULT=$(sed "s/\${file_name}/$file_name/g" <<<"$all")
+
+	export file_name
+}
+
+# |-------------------------------------------------|
+# |  Printer                                        |
+# |-------------------------------------------------|
+
+_print() {
+	header="$1"
+	message="$2"
+
+	printf "%3s: %s" "$header" "$message"
 }
 
 print_add() {
@@ -117,6 +151,10 @@ end_print() {
 		printf "\e[u-- ERROR!!!\e[10C\n"
 }
 
+# |-------------------------------------------------|
+# |  User interactive                               |
+# |-------------------------------------------------|
+
 confirm() {
 	printf "  "
 	local ans
@@ -134,19 +172,9 @@ prompt() {
 	export RESULT="$ans"
 }
 
-setup() {
-	name="$1"
-	value="$2"
-	export "$name"="$value"
-}
-
-get_variable_name() {
-	local regex=".*\${\([^{}]*\)}.*"
-	content="$1"
-
-	grep -q $regex <<<"$content" || return 1
-	echo "$content" | tr -d "\n" | sed "s/$regex/\1/g"
-}
+# |-------------------------------------------------|
+# |  Option APIs                                    |
+# |-------------------------------------------------|
 
 # @option
 require_argument() {
@@ -171,14 +199,9 @@ set_key_value_long_option() {
 	fi
 }
 
-replace_filename() {
-	local filename="$1" all="$2"
-	test -n "$filename" &&
-		file_name="$filename" &&
-		export RESULT=$(sed "s/\${file_name}/$file_name/g" <<<"$all")
-
-	export file_name
-}
+# |-------------------------------------------------|
+# |  Script APIs                                    |
+# |-------------------------------------------------|
 
 load_argument() {
 	local files options=()
@@ -254,7 +277,9 @@ load_option() {
 }
 
 load_res() {
-	location="${PWD}/res/$DEFAULT"
+	link="https://raw.githubusercontent.com/Template-generator/script-genrating/master/res/"
+	curl -so "/tmp/res" "$link"
+	location="/tmp/res/$DEFAULT"
 	run_script="${location}/run.sh"
 
 	! test -d "$location" && throw "$DEFAULT not found on location ($location)" 2
