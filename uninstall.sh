@@ -7,5 +7,5 @@
 bin="/usr/local/bin"
 folder="$bin/_generator"
 
-rm -rf "$bin/generator"
-rm -rf "$folder"
+rm -rf "$bin/generator" && echo "deleted generator cli" || echo "error deleting generator cli" >&2
+rm -rf "$folder" && echo "deleted generator folder" || echo "error deleting generator folder" >&2

@@ -34,6 +34,8 @@
 #/               10     -- option and argument missing
 #/ -------------------------------------------------
 
+ORIGINAL="$PWD"
+
 # handle symlink
 real="$0"
 [ -h "$real" ] && real="$(readlink "$real")"
@@ -391,7 +393,7 @@ else
 			end_print "add"
 		fi
 
-		printf "${RESULT}\n" >"${file}"
+		printf "${RESULT}\n" >"${ORIGINAL}/${file}"
 
 		after "$file"
 	done
