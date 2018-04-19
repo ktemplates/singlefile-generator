@@ -384,5 +384,7 @@ else
 		fi
 
 		printf "${RESULT}\n" >"${file}"
+
+		after "$file"
 	done
 fi

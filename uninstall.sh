@@ -7,8 +7,5 @@
 bin="/usr/local/bin"
 folder="$bin/_generator"
 
-link="https://github.com/Template-generator/script-genrating.git"
-
-git clone "$link" "$folder" || echo "exist"
-
-ln -s "${folder}/generator.sh" "$bin/generator"
+rm -rf "$bin/generator"
+rm -rf "$folder"

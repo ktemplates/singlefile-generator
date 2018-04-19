@@ -11,4 +11,10 @@ required() {
 	return 0
 }
 
+after() {
+	result="$1"
+	chmod +x "$result"
+}
+
 export -f required
+export -f after

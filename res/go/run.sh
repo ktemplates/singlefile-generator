@@ -10,4 +10,10 @@ required() {
 	return 0
 }
 
+after() {
+	result="$1"
+	echo "created: $result"
+}
+
 export -f required
+export -f after
