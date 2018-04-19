@@ -230,14 +230,18 @@ load_argument() {
 }
 
 load_option() {
-	while getopts 'DhHs:p:t:-:' flag; do
+	while getopts 'DdHhS:s:P:p:T:t:-:' flag; do
 		case "${flag}" in
 		D) set -x ;;
+		d) set -x ;;
 		H) help && exit 0 ;;
 		h) help && exit 0 ;;
 		s) shell_name="$OPTARG" ;;
+		S) shell_name="$OPTARG" ;;
 		p) package_name="$OPTARG" ;;
+		P) package_name="$OPTARG" ;;
 		t) DEFAULT="$OPTARG" ;;
+		T) DEFAULT="$OPTARG" ;;
 		-)
 			export LONG_OPTARG
 			export LONG_OPTVAL
@@ -251,6 +255,7 @@ load_option() {
 			help)
 				no_argument
 				help
+				exit 0
 				;;
 			shell*)
 				require_argument
