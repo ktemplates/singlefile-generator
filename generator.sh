@@ -233,12 +233,14 @@ load_argument() {
 }
 
 load_option() {
-	while getopts 'DdHhIiUuRrS:s:P:p:T:t:-:' flag; do
+	while getopts 'DdHhVvIiUuRrS:s:P:p:T:t:-:' flag; do
 		case "${flag}" in
 		D) set -x ;;
 		d) set -x ;;
 		H) help && exit 0 ;;
 		h) help && exit 0 ;;
+		V) version && exit 0 ;;
+		v) version && exit 0 ;;
 		s) shell_name="$OPTARG" ;;
 		S) shell_name="$OPTARG" ;;
 		p) package_name="$OPTARG" ;;
@@ -264,6 +266,11 @@ load_option() {
 			help)
 				no_argument
 				help
+				exit 0
+				;;
+			version)
+				no_argument
+				version
 				exit 0
 				;;
 			shell*)
