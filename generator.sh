@@ -33,8 +33,10 @@
 #/               10     -- option and argument missing
 #/ -------------------------------------------------
 
-cd "$(dirname "$0")" || exit 1
-# cd "$(dirname "$(realpath "$0")")"
+# handle symlink
+real="$0"
+[ -h "$real" ] && real="$(readlink "$real")"
+cd "$(dirname "$real")" || exit 1
 
 help() {
 	cat "generator.sh" | grep "^#/" | sed "s/#\/ //g"
