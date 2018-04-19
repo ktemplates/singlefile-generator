@@ -232,7 +232,7 @@ load_argument() {
 }
 
 load_option() {
-	while getopts 'DdHhS:s:P:p:T:t:-:' flag; do
+	while getopts 'DdHhIiUuRrS:s:P:p:T:t:-:' flag; do
 		case "${flag}" in
 		D) set -x ;;
 		d) set -x ;;
@@ -244,6 +244,12 @@ load_option() {
 		P) package_name="$OPTARG" ;;
 		t) DEFAULT="$OPTARG" ;;
 		T) DEFAULT="$OPTARG" ;;
+		i) "./install.sh" && exit 0 ;;
+		I) "./install.sh" && exit 0 ;;
+		u) "./uninstall.sh" && exit 0 ;;
+		U) "./uninstall.sh" && exit 0 ;;
+		r) "./reinstall.sh" && exit 0 ;;
+		R) "./reinstall.sh" && exit 0 ;;
 		-)
 			export LONG_OPTARG
 			export LONG_OPTVAL
@@ -270,6 +276,18 @@ load_option() {
 			package*)
 				require_argument
 				package_name="$LONG_OPTVAL"
+				;;
+			install)
+				no_argument
+				"./install.sh" && exit 0
+				;;
+			uninstall)
+				no_argument
+				"./uninstall.sh" && exit 0
+				;;
+			reinstall)
+				no_argument
+				"./reinstall.sh" && exit 0
 				;;
 			*)
 				# because optspec is assigned by 'getopts' command
@@ -352,7 +370,6 @@ load_option "${OPTIONS[@]}"
 
 if ! load_res; then
 	throw "cannot load resource" 1
-
 fi
 
 # stdout
