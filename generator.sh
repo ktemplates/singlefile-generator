@@ -26,6 +26,7 @@
 #/ Version:      0.0.1  -- Add option
 #/               1.0.0  -- Completed first version
 #/               1.1.0  -- Improvement and enhancement, also Fix
+#/               2.0.0  -- Easier to install, uninstall, reinstall
 #/ -------------------------------------------------
 #/ Error code    1      -- error
 #/               2      -- location not found
@@ -46,7 +47,7 @@ help() {
 }
 
 version() {
-	echo "1.1.0"
+	echo "2.0.0"
 }
 
 # -------------------------------------------------
