@@ -419,7 +419,7 @@ else
 		fi
 
 		printf "${RESULT}\n" >"${ORIGINAL}/${file}"
-
+		cd "${ORIGINAL}" || exit 1
 		after "$file"
 	done
 fi
