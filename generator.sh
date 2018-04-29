@@ -363,6 +363,8 @@ load_res() {
 				fi
 
 				content=$(sed "s/\${$variable}/$replace/g" <<<"$content")
+				# update ignore variable
+				content=$(sed "s/\$\${$variable}/\${$variable}/g" <<<"$content")
 			else
 				REQUIRE="file_name,$REQUIRE"
 			fi
