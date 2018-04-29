@@ -10,9 +10,8 @@
 #/                                      -- gen, with default template to stdout
 #/               generator.sh <filename[.ext]>...
 #/                                      -- gen, with default template to file(s)
-#/               generator.sh [-t|--template <name>] [-s|--sub <subtemplate>]
-#/                                      -- gen, with input template name and (optional) subtemplate
-#/                                      --      for example template is shell, sub-template is zsh
+#/               generator.sh [<filename[.ext]>...] [-t|--type <name>] [...]
+#/                                      -- gen, with input variable and option
 #/ Options:      --help | -h
 #/                      -- help command
 #/               --version | -v
@@ -20,6 +19,10 @@
 #/               --type | -t <script type>
 #/                      -- input type name, specify by folder in 'res' folder
 #/                      -- link: https://github.com/Template-generator/script-genrating/tree/master/res
+#/               --shell | -s <shell name>
+#/                      -- use with type 'shell'
+#/               --package | -p <package name>
+#/                      -- use with type 'go'
 #/ Create by:    Kamontat Chantrachirathumrong
 #/ Since:        18 / 04 / 2018
 #/ -------------------------------------------------
@@ -28,6 +31,7 @@
 #/               1.1.0  -- Improvement and enhancement, also Fix
 #/               2.0.0  -- Easier to install, uninstall, reinstall
 #/               2.0.1  -- fix create error, and version error
+#/               2.0.2  -- fix help and version error, update documents
 #/ -------------------------------------------------
 #/ Error code    1      -- error
 #/               2      -- location not found
