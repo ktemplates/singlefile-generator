@@ -103,7 +103,7 @@ setup() {
 }
 
 get_variable_name() {
-	local regex=".*[^\$]\${\([^{}]*\)}.*"
+	local regex=".*\$\${\([^{}]*\)}.*"
 	content="$1"
 
 	grep -q $regex <<<"$content" || return 1
@@ -362,9 +362,7 @@ load_res() {
 						replace="$RESULT"
 				fi
 
-				content=$(sed "s/\${$variable}/$replace/g" <<<"$content")
-				# update ignore variable
-				content=$(sed "s/\$\${$variable}/\${$variable}/g" <<<"$content")
+				content=$(sed "s/\$\${$variable}/$replace/g" <<<"$content")
 			else
 				REQUIRE="file_name,$REQUIRE"
 			fi
