@@ -1,5 +1,5 @@
 version() {
-  echo "${file_name} version: 0.0.1"
+  echo "$${file_name} version: 0.0.1"
 }
 
 
