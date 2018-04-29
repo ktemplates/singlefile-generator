@@ -103,7 +103,7 @@ setup() {
 }
 
 get_variable_name() {
-	local regex=".*\${\([^{}]*\)}.*"
+	local regex=".*[^\$]\${\([^{}]*\)}.*"
 	content="$1"
 
 	grep -q $regex <<<"$content" || return 1
