@@ -33,6 +33,7 @@
 #/               2.0.1  -- fix create error, and version error
 #/               2.0.2  -- fix help and version error, update documents
 #/               2.1.0  -- Add more features to shell res
+#/               2.1.1  -- fix a lot of decode problem
 #/ -------------------------------------------------
 #/ Error code    1      -- error
 #/               2      -- location not found
