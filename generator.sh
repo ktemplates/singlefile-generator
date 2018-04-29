@@ -38,6 +38,7 @@
 #/               2.1.1  -- fix a lot of decode problem
 #/               2.2.0  -- add app version
 #/               2.3.0  -- add yes option
+#/               2.3.1  -- improve code and fix bug(s)
 #/ -------------------------------------------------
 #/ Error code    1      -- error
 #/               2      -- location not found
@@ -58,7 +59,7 @@ help() {
 }
 
 version() {
-	echo "2.3.0"
+	echo "2.3.1"
 }
 
 # -------------------------------------------------
