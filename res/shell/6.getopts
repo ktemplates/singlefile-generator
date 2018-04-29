@@ -2,8 +2,8 @@
 # @syscall
 set_key_value_long_option() {
 	if [[ $OPTARG =~ "=" ]]; then
-		LONG_OPTVAL="${OPTARG#*=}"
-		LONG_OPTARG="${OPTARG%=$LONG_OPTVAL}"
+		LONG_OPTVAL="$${OPTARG#*=}"
+		LONG_OPTARG="$${OPTARG%=$LONG_OPTVAL}"
 	else
 		LONG_OPTARG="$OPTARG"
 		LONG_OPTVAL="$1"
