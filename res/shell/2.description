@@ -10,8 +10,9 @@
 #/ Create by:    NAME SURNAME <EMAIL>
 #/ Since:        dd/MM/YYYY
 #/ -----------------------------------
-#/ Version:      0.0.1  -- description
-#/               0.0.2b -- beta-format
+#/ Version:      0.0.1   -- description
+#/               0.0.2b1 -- beta-format
+#/               0.0.2a1 -- alpha-format
 #/ -----------------------------------
 #/ Error code    1      -- error
 #/ -----------------------------------
