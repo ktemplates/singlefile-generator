@@ -12,14 +12,16 @@
 #/                                      -- gen, with default template to file(s)
 #/               generator.sh [<filename[.ext]>...] [-t|--type <name>] [...]
 #/                                      -- gen, with input variable and option
-#/ Options:      --help | -h
+#/ Options:      --help    | -h
 #/                      -- help command
 #/               --version | -v
 #/                      -- get version
-#/               --type | -t <script type>
+#/               --yes     | -y
+#/                      -- already say yes to every prompt
+#/               --type    | -t <script type>
 #/                      -- input type name, specify by folder in 'res' folder
 #/                      -- link: https://github.com/Template-generator/script-genrating/tree/master/res
-#/               --shell | -s <shell name>
+#/               --shell   | -s <shell name>
 #/                      -- use with type 'shell'
 #/               --package | -p <package name>
 #/                      -- use with type 'go'
@@ -67,6 +69,7 @@ test -z "$SUB_DEFAULT" && export SUB_DEFAULT="bash"
 
 GENERATE_STR=""
 REQUIRE=""
+YES=false
 
 # -------------------------------------------------
 # Functions
@@ -177,6 +180,7 @@ end_print() {
 # |-------------------------------------------------|
 
 confirm() {
+	[[ "$YES" == true ]] && return 0
 	printf "  "
 	local ans
 	read -rn 1 ans
@@ -241,7 +245,7 @@ load_argument() {
 }
 
 load_option() {
-	while getopts 'DdHhVvIiUuRrS:s:P:p:T:t:-:' flag; do
+	while getopts 'DdHhVvIiUuRrS:s:P:p:T:t:Yy-:' flag; do
 		case "${flag}" in
 		D) set -x ;;
 		d) set -x ;;
@@ -255,6 +259,8 @@ load_option() {
 		P) package_name="$OPTARG" ;;
 		t) DEFAULT="$OPTARG" ;;
 		T) DEFAULT="$OPTARG" ;;
+		Y) YES=true ;;
+		y) YES=true ;;
 		i) "./install.sh" && exit 0 ;;
 		I) "./install.sh" && exit 0 ;;
 		u) "./uninstall.sh" && exit 0 ;;
@@ -304,6 +310,10 @@ load_option() {
 			reinstall)
 				no_argument
 				"./reinstall.sh" && exit 0
+				;;
+			yes) 
+				no_argument
+				YES=true
 				;;
 			*)
 				# because optspec is assigned by 'getopts' command
