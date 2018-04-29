@@ -17,7 +17,7 @@
 #/               --version | -v
 #/                      -- get version
 #/               --yes     | -y
-#/                      -- already say yes to every prompt
+#/                      -- always say yes to every prompt
 #/               --type    | -t <script type>
 #/                      -- input type name, specify by folder in 'res' folder
 #/                      -- link: https://github.com/Template-generator/script-genrating/tree/master/res
@@ -28,15 +28,16 @@
 #/ Create by:    Kamontat Chantrachirathumrong
 #/ Since:        18 / 04 / 2018
 #/ -------------------------------------------------
-#/ Version:      0.0.1  -- Add option
-#/               1.0.0  -- Completed first version
-#/               1.1.0  -- Improvement and enhancement, also Fix
-#/               2.0.0  -- Easier to install, uninstall, reinstall
+#/ Version:      0.0.1  -- add option
+#/               1.0.0  -- completed first version
+#/               1.1.0  -- improvement and enhancement, also Fix
+#/               2.0.0  -- easier to install, uninstall, reinstall
 #/               2.0.1  -- fix create error, and version error
 #/               2.0.2  -- fix help and version error, update documents
-#/               2.1.0  -- Add more features to shell res
+#/               2.1.0  -- add more features to shell res
 #/               2.1.1  -- fix a lot of decode problem
 #/               2.2.0  -- add app version
+#/               2.3.0  -- add yes option
 #/ -------------------------------------------------
 #/ Error code    1      -- error
 #/               2      -- location not found
@@ -57,7 +58,7 @@ help() {
 }
 
 version() {
-	echo "2.2.0"
+	echo "2.3.0"
 }
 
 # -------------------------------------------------
