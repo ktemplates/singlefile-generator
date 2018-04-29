@@ -2,8 +2,8 @@
 # @syscall
 set_key_value_long_option() {
 	if [[ $OPTARG =~ "=" ]]; then
-		LONG_OPTVAL="$${OPTARG#*=}"
-		LONG_OPTARG="$${OPTARG%=$LONG_OPTVAL}"
+		LONG_OPTVAL="${OPTARG#*=}"
+		LONG_OPTARG="${OPTARG%=$LONG_OPTVAL}"
 	else
 		LONG_OPTARG="$OPTARG"
 		LONG_OPTVAL="$1"
@@ -38,7 +38,7 @@ load_option() {
 			*)
 				# because optspec is assigned by 'getopts' command
 				# shellcheck disable=SC2154
-				if [ "$OPTERR" == 1 ] && [ "$${optspec:0:1}" != ":" ]; then
+				if [ "$OPTERR" == 1 ] && [ "${optspec:0:1}" != ":" ]; then
 					echo "Unexpected option '$LONG_OPTARG', run --help for more information" >&2
 					exit 9
 				fi
