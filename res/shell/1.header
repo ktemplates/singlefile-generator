@@ -1,4 +1,5 @@
 #!/usr/bin/env $${shell_name}
+# generate by $${app_version}
 
 # set -x #DEBUG - Display commands and their arguments as they are executed.
 # set -v #VERBOSE - Display shell input lines as they are read.
