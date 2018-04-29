@@ -34,6 +34,7 @@
 #/               2.0.2  -- fix help and version error, update documents
 #/               2.1.0  -- Add more features to shell res
 #/               2.1.1  -- fix a lot of decode problem
+#/               2.2.0  -- add app version
 #/ -------------------------------------------------
 #/ Error code    1      -- error
 #/               2      -- location not found
@@ -54,7 +55,7 @@ help() {
 }
 
 version() {
-	echo "2.1.1"
+	echo "2.2.0"
 }
 
 # -------------------------------------------------
@@ -378,6 +379,8 @@ load_res() {
 # -------------------------------------------------
 # App logic
 # -------------------------------------------------
+
+app_version="$(version)"
 
 load_argument "$@"
 
