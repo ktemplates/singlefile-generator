@@ -1,0 +1,3 @@
+version() {
+  echo "${filename} version: 0.0.1"
+}
