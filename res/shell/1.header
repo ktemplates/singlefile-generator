@@ -1,9 +1,2 @@
 #!/usr/bin/env $${shell_name}
 # shellcheck disable=SC1000
-
-# generate by $${app_version}
-# link (https://github.com/Template-generator/script-genrating/tree/$${app_version})
-
-# set -x #DEBUG - Display commands and their arguments as they are executed.
-# set -v #VERBOSE - Display shell input lines as they are read.
-# set -n #EVALUATE - Check syntax of the script but don't execute.

@@ -109,9 +109,8 @@ setup() {
 }
 
 get_variable_name() {
-	local regex=".*\$\${\([^{}]*\)}.*"
+	local regex='.*\$\${\([^{}]*\)}.*'
 	content="$1"
-
 	grep -q $regex <<<"$content" || return 1
 	echo "$content" | tr -d "\n" | sed "s/$regex/\1/g"
 }
@@ -120,7 +119,7 @@ replace_filename() {
 	local filename="$1" all="$2"
 	test -n "$filename" &&
 		file_name="$filename" &&
-		export RESULT=$(sed "s/\${file_name}/$file_name/g" <<<"$all")
+		export RESULT=$(sed "s/\$\${file_name}/$file_name/g" <<<"$all")
 
 	export file_name
 }
@@ -181,10 +180,11 @@ end_print() {
 # |-------------------------------------------------|
 
 confirm() {
-	[[ "$YES" == true ]] && return 0
 	printf "  "
 	local ans
-	read -rn 1 ans
+	[[ "$YES" == true ]] &&
+		ans="y" ||
+		read -rn 1 ans
 	printf "  \e[s"
 	[[ $(to_lower_case "$ans") == "y" ]]
 }
@@ -312,7 +312,7 @@ load_option() {
 				no_argument
 				"./reinstall.sh" && exit 0
 				;;
-			yes) 
+			yes)
 				no_argument
 				YES=true
 				;;
@@ -404,9 +404,8 @@ fi
 # stdout
 if [ ${#FILES} -eq 0 ]; then
 	# prompt
-	[[ "$REQUIRE" =~ "file_name" ]] &&
-		prompt "file_name" &&
-		eval "export ${variable}=$RESULT" &&
+	prompt "file_name" &&
+		export file_name="$RESULT" &&
 		replace="$RESULT"
 	# replace
 	replace_filename "$replace" "$GENERATE_STR"
@@ -430,7 +429,7 @@ else
 			throw "${error} not exist!" 5
 		fi
 
-		if test -f "${file}"; then
+		if test -f "${ORIGINAL}/${file}"; then
 			print_replace "$file"
 			if ! confirm; then
 				end_print "not"
