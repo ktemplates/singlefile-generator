@@ -1,1 +1,3 @@
 package ${package_name}
+// generate by $${app_version}
+// link (https://github.com/Template-generator/script-genrating/tree/$${app_version})
