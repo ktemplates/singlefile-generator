@@ -1,4 +1,15 @@
 
+# @option
+require_argument() {
+	throw_if_empty "$LONG_OPTVAL" "'$LONG_OPTARG' require argument" 9
+}
+
+# @option
+no_argument() {
+	[[ -n $LONG_OPTVAL ]] && ! [[ $LONG_OPTVAL =~ "-" ]] && throw "$LONG_OPTARG don't have argument" 9
+	OPTIND=$((OPTIND - 1))
+}
+
 # @syscall
 set_key_value_long_option() {
 	if [[ $OPTARG =~ "=" ]]; then
