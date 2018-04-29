@@ -9,6 +9,8 @@ folder="$bin/_generator"
 
 link="https://github.com/Template-generator/script-genrating.git"
 
+cd "$bin" || exit 1
+
 git clone "$link" "$folder" || echo "exist"
 
 ln -s "${folder}/generator.sh" "$bin/generator"
