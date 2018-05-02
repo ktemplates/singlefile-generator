@@ -12,6 +12,7 @@
 #/                                      -- gen, with default template to file(s)
 #/               generator.sh [<filename[.ext]>...] [-t|--type <name>] [...]
 #/                                      -- gen, with input variable and option
+#/ Arguments:    input MUST BE FILENAME only, relative and absolute path are not allow
 #/ Options:      --help    | -h
 #/                      -- help command
 #/               --version | -v
@@ -39,6 +40,7 @@
 #/               2.2.0  -- add app version
 #/               2.3.0  -- add yes option
 #/               2.3.1  -- improve code and fix bug(s)
+#/               2.3.2  -- fix sed error and add more documents
 #/ -------------------------------------------------
 #/ Error code    1      -- error
 #/               2      -- location not found
@@ -59,7 +61,7 @@ help() {
 }
 
 version() {
-	echo "2.3.1"
+	echo "2.3.2"
 }
 
 # -------------------------------------------------
@@ -118,7 +120,9 @@ get_variable_name() {
 
 replace_filename() {
 	local filename="$1" all="$2"
+	# if filename exist in both input and content
 	test -n "$filename" &&
+		grep -q "\$\${file_name}" <<<"$all" &&
 		file_name="$filename" &&
 		export RESULT=$(sed "s/\$\${file_name}/$file_name/g" <<<"$all")
 
