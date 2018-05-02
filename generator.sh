@@ -122,10 +122,13 @@ replace_filename() {
 	local filename="$1" all="$2"
 	# if filename exist in both input and content
 	test -n "$filename" &&
-		grep -q "\$\${file_name}" <<<"$all" &&
 		file_name="$filename" &&
-		export RESULT=$(sed "s/\$\${file_name}/$file_name/g" <<<"$all")
-
+		grep -q "\$\${file_name}" <<<"$all" &&
+		export RESULT=$(sed "s/\$\${file_name}/$file_name/g" <<<"$all") &&
+		export file_name &&
+		return 0
+		
+	export RESULT="${all}"
 	export file_name
 }
 
