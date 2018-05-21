@@ -41,6 +41,7 @@
 #/               2.3.0  -- add yes option
 #/               2.3.1  -- improve code and fix bug(s)
 #/               2.3.2  -- fix sed error and add more documents
+#/               2.3.3  -- improve a lot of 'shell' resource files
 #/ -------------------------------------------------
 #/ Error code    1      -- error
 #/               2      -- location not found
@@ -61,7 +62,7 @@ help() {
 }
 
 version() {
-	echo "2.3.2"
+	echo "generator version: 2.3.3"
 }
 
 # -------------------------------------------------
