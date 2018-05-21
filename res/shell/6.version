@@ -1,6 +1,6 @@
 
 version() {
-  echo "$${file_name} version: 0.0.1"
+  grep "^#// " "$${file_name}" | sed 's/#\/\/ //g'
 }
 
 
