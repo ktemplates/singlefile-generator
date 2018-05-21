@@ -1,6 +1,6 @@
 
 help() {
-  grep "^#/" "$${file_name}" | sed 's/#\/ //g'
+  grep "^#/ " "$${file_name}" | sed 's/#\/ //g'
 }
 
 # [[ "$1" == "--help" ]] ||
