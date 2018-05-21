@@ -380,7 +380,7 @@ load_res() {
 				replace="${!variable}"
 				if test -z "${!variable}" &&
 					prompt "$variable"; then
-					eval "export ${variable}=$RESULT" &&
+					eval "export ${variable}=\"$RESULT\"" &&
 						replace="$RESULT"
 				fi
 
