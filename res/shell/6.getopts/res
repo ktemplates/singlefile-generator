@@ -1,3 +1,15 @@
+# @helper
+throw() {
+	printf '%s\n' "$1" >&2 && is_integer "$2" && exit "$2"
+	return 0
+}
+
+# @helper
+throw_if_empty() {
+	local text="$1"
+	test -z "$text" && throw "$2" "$3"
+	return 0
+}
 
 # @option
 require_argument() {
@@ -27,7 +39,7 @@ load_option() {
 		case "${flag}" in
 		H) help && exit 0 ;;
 		h) help && exit 0 ;;
-		\?) help && exit 0 ;;
+		\\?) help && exit 0 ;;
 		V) version && exit 0 ;;
 		v) version && exit 0 ;;
 		-)

@@ -1,0 +1,4 @@
+Auto cd to script location. There are 3 option
+First is use only 'dirname' which can error something but compatible.
+Second is 'dirname' with 'realpath'.
+Third is symlink, for auto handle symlink script, this also use 'readlink' command

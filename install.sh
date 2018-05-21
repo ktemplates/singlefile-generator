@@ -14,3 +14,4 @@ cd "$bin" || exit 1
 git clone "$link" "$folder" || echo "exist"
 
 ln -s "${folder}/generator.sh" "$bin/generator"
+ln -s "${folder}/generator-resource.sh" "$bin/generator-resource"

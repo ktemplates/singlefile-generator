@@ -1,4 +1,3 @@
-
 #/ -----------------------------------
 #/ Description:  ...
 #/ How to:       ...
@@ -8,8 +7,8 @@
 #/               --version | -v | version | v
 #/                   > show command version
 #/ -----------------------------------
-#/ Create by:    $${createBy}
-#/ Since:        dd/MM/YYYY
+#/ Create by:    _{create_by}_
+#/ Since:        _{date}_
 #/ -----------------------------------
 #/ Error code    1      -- error
 #/ -----------------------------------
