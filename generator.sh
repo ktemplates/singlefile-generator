@@ -31,21 +31,28 @@
 export GENERATOR_VERSION="3.0.0"
 export app_version="$GENERATOR_VERSION" # for resource file
 
-# handle symlink
-real="$0"
-[ -h "$real" ] && real="$(readlink "$real")"
-cd "$(dirname "$real")" || exit 1
+to_script_location() {
+	local original="${PWD}"
+	# handle symlink
+	real="$0"
+	[ -h "$real" ] && real="$(readlink "$real")"
+	cd "$(dirname "$real")" && pwd || exit 1
+	cd "$original" || exit 1
+}
+
+SCRIPT_LOCATION="$(to_script_location)"
+export SCRIPT_LOCATION
 
 DEFAULT_TYPE="shell"
 DEFAULT_RESOURCE_FILE="res"
 
-DEFAULT_RESOURCE_LOCATION="${PWD}/${DEFAULT_RESOURCE_FILE}"
+DEFAULT_RESOURCE_LOCATION="${SCRIPT_LOCATION}/${DEFAULT_RESOURCE_FILE}"
 
 export DEFAULT_GENERATOR_TMP_FILE="/tmp/generator.temp"
 export DEFAULT_GENERATOR_TMP1_FILE="/tmp/generator.1.temp"
 
 help() {
-	grep "^#/ " "generator.sh" | sed 's/#\/ //g'
+	grep "^#/ " "${SCRIPT_LOCATION}/generator.sh" | sed 's/#\/ //g'
 }
 
 version() {
@@ -55,25 +62,6 @@ version() {
 list() {
 	find "$DEFAULT_RESOURCE_LOCATION" -type d -depth 1 | sed "s,${DEFAULT_RESOURCE_LOCATION}/,,g"
 }
-
-[[ "$1" == "help" ]] ||
-	[[ "$1" == "h" ]] ||
-	[[ "$1" == "--help" ]] ||
-	[[ "$1" == "-h" ]] ||
-	[[ "$1" == "?" ]] &&
-	help && exit 0
-
-[[ "$1" == "version" ]] ||
-	[[ "$1" == "v" ]] ||
-	[[ "$1" == "--version" ]] ||
-	[[ "$1" == "-v" ]] &&
-	version && exit 0
-
-[[ "$1" == "list" ]] ||
-	[[ "$1" == "l" ]] ||
-	[[ "$1" == "--list" ]] ||
-	[[ "$1" == "-l" ]] &&
-	list && exit 0
 
 get_absolute_filename() {
 	local seperator="/"
@@ -193,11 +181,30 @@ load_type() {
 }
 
 load_env() {
-	local env="${PWD}/.generator.env"
+	local env="${SCRIPT_LOCATION}/.generator.env"
 	test -f "$env" &&
 		source "$env" ||
 		return 0
 }
+
+[[ "$1" == "help" ]] ||
+	[[ "$1" == "h" ]] ||
+	[[ "$1" == "--help" ]] ||
+	[[ "$1" == "-h" ]] ||
+	[[ "$1" == "?" ]] &&
+	help && exit 0
+
+[[ "$1" == "version" ]] ||
+	[[ "$1" == "v" ]] ||
+	[[ "$1" == "--version" ]] ||
+	[[ "$1" == "-v" ]] &&
+	version && exit 0
+
+[[ "$1" == "list" ]] ||
+	[[ "$1" == "l" ]] ||
+	[[ "$1" == "--list" ]] ||
+	[[ "$1" == "-l" ]] &&
+	list && exit 0
 
 TYPE="$(load_type "$1")" || file="$1"
 [[ $TYPE == "empty" ]] &&
@@ -312,7 +319,7 @@ prompt() {
 }
 
 generator_one_file() {
-	local file="$1"
+	local file="$1" result_file
 	get_variable "${file}"
 
 	for var in "${VARIABLE_ARRAY[@]}"; do
@@ -327,7 +334,15 @@ generator_one_file() {
 		replace_variable "$var" "$value" "${file}"
 	done
 
-	cat "$DEFAULT_GENERATOR_TMP_FILE" >>"$DEFAULT_GENERATOR_TMP1_FILE"
+	result_file=""
+
+	if ((${#VARIABLE_ARRAY[@]} == 0)); then
+		result_file="$file"
+	else
+		result_file="$DEFAULT_GENERATOR_TMP_FILE"
+	fi
+
+	cat "$result_file" >>"$DEFAULT_GENERATOR_TMP1_FILE"
 	echo >>"$DEFAULT_GENERATOR_TMP1_FILE"
 
 	test -f "$DEFAULT_GENERATOR_TMP_FILE" &&
