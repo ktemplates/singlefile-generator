@@ -8,7 +8,7 @@
 #/               --version | -v | version | v
 #/                   > show command version
 #/ -----------------------------------
-#/ Create by:    NAME SURNAME <EMAIL>
+#/ Create by:    $${createBy}
 #/ Since:        dd/MM/YYYY
 #/ -----------------------------------
 #/ Error code    1      -- error
