@@ -8,4 +8,4 @@ version() {
 #   [[ "$1" == "-v" ]] ||
 #   [[ "$1" == "version" ]] ||
 #   [[ "$1" == "v" ]] &&
-#   version
+#   version && exit 0
