@@ -28,7 +28,7 @@
 #/ -----------------------------------
 
 # generator version
-export GENERATOR_VERSION="3.0.1"
+export GENERATOR_VERSION="v3.0.2"
 export app_version="$GENERATOR_VERSION" # for resource file
 
 to_script_location() {
