@@ -63,6 +63,14 @@ list() {
 	find "$DEFAULT_RESOURCE_LOCATION" -type d -depth 1 | sed "s,${DEFAULT_RESOURCE_LOCATION}/,,g"
 }
 
+reinstall() {
+	bash "${SCRIPT_LOCATION}/reinstall.sh"
+}
+
+uninstall() {
+	bash "${SCRIPT_LOCATION}/uninstall.sh"
+}
+
 get_absolute_filename() {
 	local seperator="/"
 	local curr rel_filename basename absolute_dir f s l
@@ -205,6 +213,18 @@ load_env() {
 	[[ "$1" == "--list" ]] ||
 	[[ "$1" == "-l" ]] &&
 	list && exit 0
+	
+[[ "$1" == "reinstall" ]] ||
+	[[ "$1" == "R" ]] ||
+	[[ "$1" == "--reinstall" ]] ||
+	[[ "$1" == "-R" ]] &&
+	reinstall && exit 0
+	
+[[ "$1" == "uninstall" ]] ||
+	[[ "$1" == "U" ]] ||
+	[[ "$1" == "--uninstall" ]] ||
+	[[ "$1" == "-U" ]] &&
+	reinstall && exit 0
 
 TYPE="$(load_type "$1")" || file="$1"
 [[ $TYPE == "empty" ]] &&
