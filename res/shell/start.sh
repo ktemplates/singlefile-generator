@@ -33,4 +33,8 @@ if [[ $IS_HELP == true ]]; then
 else
 	loop_generate
 	get_result
+	
+	if test -n "$ABSOLUTE_FILE"; then
+		chmod +x "$ABSOLUTE_FILE"
+	fi
 fi
