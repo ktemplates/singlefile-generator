@@ -2,7 +2,7 @@
 # shellcheck disable=SC1000,SC1090
 
 # generate by generator version: 2.3.3
-# link (https://github.com/Template-generator/script-genrating/tree/generator version: 2.3.3)
+# link (https://github.com/Template-generator/script-genrating/tree/2.3.3)
 
 # set -x #DEBUG - Display commands and their arguments as they are executed.
 # set -v #VERBOSE - Display shell input lines as they are read.
@@ -28,7 +28,7 @@
 #/ -----------------------------------
 
 # generator version
-export GENERATOR_VERSION="3.0.0"
+export GENERATOR_VERSION="3.0.1"
 export app_version="$GENERATOR_VERSION" # for resource file
 
 to_script_location() {
