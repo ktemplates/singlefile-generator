@@ -1,7 +1,7 @@
 #!/usr/bin/env _{shell_name}_
 # shellcheck disable=SC1000
 
-# generate by _{app_version}_
+# generate by script-generating _{app_version}_
 # link (https://github.com/Template-generator/script-genrating/tree/_{app_version}_)
 
 # set -x #DEBUG - Display commands and their arguments as they are executed.
