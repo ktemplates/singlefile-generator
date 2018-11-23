@@ -7,7 +7,7 @@
 bin="/usr/local/bin"
 folder="$bin/_generator"
 
-link="https://github.com/Template-generator/script-genrating.git"
+link="https://github.com/Template-generator/create-script-file.git"
 
 cd "$bin" || exit 1
 
