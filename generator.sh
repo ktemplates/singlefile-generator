@@ -213,13 +213,13 @@ load_env() {
 	[[ "$1" == "--list" ]] ||
 	[[ "$1" == "-l" ]] &&
 	list && exit 0
-	
+
 [[ "$1" == "reinstall" ]] ||
 	[[ "$1" == "R" ]] ||
 	[[ "$1" == "--reinstall" ]] ||
 	[[ "$1" == "-R" ]] &&
 	reinstall && exit 0
-	
+
 [[ "$1" == "uninstall" ]] ||
 	[[ "$1" == "U" ]] ||
 	[[ "$1" == "--uninstall" ]] ||
@@ -280,7 +280,7 @@ get_variable() {
 			variable_array+=("$result")
 	done <"$file"
 
-	export VARIABLE_ARRAY=("${variable_array[@]}")
+	export VARIABLE_ARRAY="${variable_array[*]}"
 }
 
 is_value_exist() {
@@ -289,6 +289,13 @@ is_value_exist() {
 
 replace_variable() {
 	local variable_name="$1" value="$2" file="$3" result
+
+	# echo "--------------------------------"
+	# echo "$variable_name"
+	# echo "$value"
+	# echo "$file"
+	# echo "--------------------------------"
+
 	# exist and size greater than 0
 	test -s "$DEFAULT_GENERATOR_TMP_FILE" && file="$DEFAULT_GENERATOR_TMP_FILE"
 	! test -f "$DEFAULT_GENERATOR_TMP_FILE" && touch "$DEFAULT_GENERATOR_TMP_FILE"
@@ -339,10 +346,11 @@ prompt() {
 }
 
 generator_one_file() {
-	local file="$1" result_file
+	local arr file="$1" result_file
 	get_variable "${file}"
+	IFS=' ' read -r -a arr <<<"$VARIABLE_ARRAY"
 
-	for var in "${VARIABLE_ARRAY[@]}"; do
+	for var in "${arr[@]}"; do
 		value="$(eval "echo \$$var")"
 		# printf 'value of %-13s: %s\n' "$var" "$value"
 		! is_value_exist "$value" &&
@@ -356,7 +364,7 @@ generator_one_file() {
 
 	result_file=""
 
-	if ((${#VARIABLE_ARRAY[@]} == 0)); then
+	if ((${#arr[@]} == 0)); then
 		result_file="$file"
 	else
 		result_file="$DEFAULT_GENERATOR_TMP_FILE"
@@ -378,16 +386,17 @@ loop_generate() {
 }
 
 loop_variable() {
-	local res desc
+	local arr res desc
 	for folder in $RESOURCE_REGEX; do
 		res="${folder}/res"
 		desc="${folder}/desc"
 		get_variable "${res}"
+		IFS=' ' read -r -a arr <<<"$VARIABLE_ARRAY"
 
 		echo "#   ${folder##*/}"
 		cat "$desc"
-		((${#VARIABLE_ARRAY[@]} > 0)) && echo "Variable(s): "
-		for var in "${VARIABLE_ARRAY[@]}"; do
+		((${#arr[@]} > 0)) && echo "Variable(s): "
+		for var in "${arr[@]}"; do
 			echo ">>  $var"
 		done
 		echo "--------------"
