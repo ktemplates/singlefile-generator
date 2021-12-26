@@ -1,8 +1,8 @@
 #!/usr/bin/env _{shell_name}_
 # shellcheck disable=SC1000
 
-# generate by create-script-file _{app_version}_
-# link (https://github.com/Template-generator/create-script-file/tree/_{app_version}_)
+# generate by singlefile-generator _{app_version}_
+# link (https://github.com/ktemplates/singlefile-generator/tree/_{app_version}_)
 
 # set -x #DEBUG - Display commands and their arguments as they are executed.
 # set -v #VERBOSE - Display shell input lines as they are read.
